@@ -550,6 +550,7 @@ const Risk: React.FC = (props) => {
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const generatePDF = async () => {
+    const dateTimeNow = new Date();
     setIsLoading(true);
     const input = document.getElementById('wrapper')!;
     input.style.width = '1400px';
@@ -568,8 +569,13 @@ const Risk: React.FC = (props) => {
       const imgWidth = 190;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       const pdf = new jsPDF('p', 'mm');
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-      pdf.save('Crossfeed_Report.pdf');
+      pdf.setFontSize(14);
+      pdf.text('Crossfeed Report - ' + dateTimeNow.toISOString(), 10, 10);
+      pdf.addImage(imgData, 'PNG', 10, 25, imgWidth, imgHeight);
+      pdf.line(3, 290, 207, 290);
+      pdf.setFontSize(8);
+      pdf.text('Prepared by ' + user.fullName, 3, 293);
+      pdf.save('Crossfeed_Report_' + dateTimeNow.toISOString() + '.pdf');
     });
     input.style.removeProperty('width');
     setIsLoading(false);
